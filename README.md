@@ -11,21 +11,16 @@ To use this library in your project:
    ```bash
    go get github.com/haile-paa/Pa-DataBase
 
-Import the custom-db package in your Go project:
-
-   import "github.com/haile-paa/Pa-DataBase"
-
    package main
-
-import (
+    import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"github.com/haile-paa/Pa-DataBase" // Import the custom database
-)
+   )
 
-func main() {
+    func main() {
 	// Initialize your custom database
 	db, err := customdb.New("./data") // Specify the directory to store the data
 	if err != nil {
@@ -63,7 +58,7 @@ func main() {
 	// Start the HTTP server
 	fmt.Println("Server is running at http://localhost:8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
+   }
  Make a POST Request to Add Data:
 You can make a POST request to the /add-user endpoint from your frontend or using a tool like Postman.
 
