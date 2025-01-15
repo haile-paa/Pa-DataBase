@@ -1,56 +1,93 @@
 # Custom Database Library
 
-This is a simple custom database implementation written in Go. It provides basic operations such as storing, reading, and deleting JSON-based records in a file system.
+This is a simple custom database implementation written in Go. It provides basic operations such as storing, reading, and deleting JSON-based records in a file system. You can integrate it into your Go projects to easily manage user data or any other JSON-based records.
 
 ## Installation
 
 To use this library in your project:
 
-1. Run `go get github.com/haile-paa/Pa-DataBase`
-2. Import the `custom-db` package in your project.
+1. Run the following command to install the package:
 
-## Usage
+   ```bash
+   go get github.com/haile-paa/Pa-DataBase
 
-```go
-package main
+Import the custom-db package in your Go project:
+
+   import "github.com/haile-paa/Pa-DataBase"
+
+   package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"github.com/haile-paa/Pa-DataBase"
+	"net/http"
+	"github.com/haile-paa/Pa-DataBase" // Import the custom database
 )
 
 func main() {
 	// Initialize your custom database
-	db, err := customdb.New("./data")
+	db, err := customdb.New("./data") // Specify the directory to store the data
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
-	// Example of writing a user record
-	user := customdb.User{
-		Name:    "John",
-		Age:     "30",
-		Contact: "1234567890",
-		Company: "Acme Corp",
-		Address: customdb.Address{"New York", "NY", "USA", "10001"},
-	}
-	if err := db.Write("users", user.Name, user); err != nil {
-		fmt.Println("Error writing user:", err)
-	}
+	// Define the HTTP server and routes
+	http.HandleFunc("/add-user", func(w http.ResponseWriter, r *http.Request) {
+		// Only accept POST requests
+		if r.Method != http.MethodPost {
+			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+			return
+		}
 
-	// Example of reading a user record
-	var readUser customdb.User
-	if err := db.Read("users", "John", &readUser); err != nil {
-		fmt.Println("Error reading user:", err)
-	} else {
-		fmt.Printf("Read user: %+v\n", readUser)
-	}
+		// Parse the incoming JSON body into a User struct
+		var user customdb.User
+		err := json.NewDecoder(r.Body).Decode(&user)
+		if err != nil {
+			http.Error(w, "Invalid JSON data", http.StatusBadRequest)
+			return
+		}
 
-	// Example of deleting a user record
-	if err := db.Delete("users", "John"); err != nil {
-		fmt.Println("Error deleting user:", err)
-	} else {
-		fmt.Println("User deleted successfully")
-	}
+		// Write the user data to the custom database
+		err = db.Write("users", user.Name, user)
+		if err != nil {
+			http.Error(w, "Failed to save user data", http.StatusInternalServerError)
+			return
+		}
+
+		// Respond with a success message
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("User added successfully"))
+	})
+
+	// Start the HTTP server
+	fmt.Println("Server is running at http://localhost:8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+ Make a POST Request to Add Data:
+You can make a POST request to the /add-user endpoint from your frontend or using a tool like Postman.
+
+For example, the user data would look like this in JSON format:
+
+json
+{
+  "Name": "John",
+  "Age": "30",
+  "Contact": "1234567890",
+  "Company": "Acme Corp",
+  "Address": {
+    "City": "New York",
+    "State": "NY",
+    "Country": "USA",
+    "Pincode": "10001"
+  }
+}
+Run the following command in your terminal to start the server:
+```bash
+  go run main.go
+
+Here’s what the directory structure of the project looks like:
+├── data/                # Directory to store data
+│   └── users/           # Folder for storing users' data
+├── main.go              # Backend code to interact with the custom database
+└── go.mod               # Go module file
