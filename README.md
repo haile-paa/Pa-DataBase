@@ -7,9 +7,9 @@ This is a simple custom database implementation written in Go. It provides basic
 To use this library in your project:
 
 1. Run the following command to install the package:
-
+```bash
    go get github.com/haile-paa/Pa-DataBase
-
+```
    ```bash
   
 
@@ -66,6 +66,7 @@ To use this library in your project:
 You can make a POST request to the /add-user endpoint from your frontend or using a tool like Postman.
 
 For example, the user data would look like this in JSON format:
+ ```bash
 
 json
 {
@@ -80,12 +81,17 @@ json
     "Pincode": "10001"
   }
 }
-Run the following command in your terminal to start the server:
+
+
+ ```
+  Run the following command in your terminal to start the server:
 ```bash
   go run main.go
-
+```
+```bash
 Here’s what the directory structure of the project looks like:
 ├── data/                # Directory to store data
 │   └── users/           # Folder for storing users' data
 ├── main.go              # Backend code to interact with the custom database
 └── go.mod               # Go module file
+```
