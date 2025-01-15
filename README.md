@@ -8,9 +8,12 @@ To use this library in your project:
 
 1. Run the following command to install the package:
 
-   ```bash
    go get github.com/haile-paa/Pa-DataBase
 
+   ```bash
+  
+
+  
    package main
     import (
 	"encoding/json"
