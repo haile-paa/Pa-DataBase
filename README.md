@@ -62,11 +62,13 @@ To use this library in your project:
 	fmt.Println("Server is running at http://localhost:8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
    }
+```
  Make a POST Request to Add Data:
 You can make a POST request to the /add-user endpoint from your frontend or using a tool like Postman.
 
 For example, the user data would look like this in JSON format:
- ```bash
+```
+ 
 
 json
 {
